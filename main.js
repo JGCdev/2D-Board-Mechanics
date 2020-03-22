@@ -85,8 +85,8 @@ myBoardObjects = [
     [ pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[11], pjsBoard[11], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
     [ pjsBoard[0], pjsBoard[0], pjsBoard[2], pjsBoard[11], pjsBoard[11], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
     [ pjsBoard[0], pjsBoard[0], pjsBoard[12], pjsBoard[12], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
-    [ pjsBoard[0], pjsBoard[3], pjsBoard[12], pjsBoard[12], pjsBoard[4], pjsBoard[0], pjsBoard[7], pjsBoard[0] ],
-    [ pjsBoard[0], pjsBoard[5], pjsBoard[0], pjsBoard[6], pjsBoard[8], pjsBoard[0], pjsBoard[9], pjsBoard[10] ]
+    [ pjsBoard[0], pjsBoard[3], pjsBoard[12], pjsBoard[12], pjsBoard[4], pjsBoard[0], pjsBoard[5], pjsBoard[0] ],
+    [ pjsBoard[0], pjsBoard[6], pjsBoard[0], pjsBoard[7], pjsBoard[8], pjsBoard[0], pjsBoard[9], pjsBoard[10] ]
 ];
 
 printBoard(myBoardObjects);
@@ -118,56 +118,50 @@ function deleteItem(board, id) {
     printBoard(board);
 }
 
+
 function shiftCells( board ) {
     let rowCount = board.length;
     let colCount = board[0].length;
-
     for ( row = rowCount - 2; 0 <= row; row-- ) {
-        let test = new Map();
-        for ( col = 0; col < colCount; col++ ) {
+      let test = new Map();
+      for ( col = 0; col < colCount; col++ ) {
         // Check if there is an ID in the cell...
-            if ( board[ row ][ col ].id ) {
-                
-                // ...and if so, then accumulate whether all cells below this ID are empty.
-                let currentTest;
-                if (test.get( board[ row ][ col ] ) === undefined) {
-                    currentTest = true;
-                } else {
-                    currentTest = test.get( board[ row ][ col ] );
-                }
-                console.log(test.get( board[ row ][ col ]));
-                test.set( board[ row ][ col ], currentTest && ( board[ row + 1 ][ col ].id === 0 ) );
-
-            }
+        if ( board[ row ][ col ].id ) {
+          // ...and if so, then accumulate whether all cells below this ID are empty.
+          let currentTest = test.get( board[ row ][ col ].id ) == undefined ? true : test.get( board[ row ][ col ].id );
+          test.set( board[ row ][ col ].id, currentTest && ( board[ row + 1 ][ col ].id === 0 ) );
         }
-
-        // Now, loop through the test list to see if we need to drop any cells down.
-        for ( col = 0; col < colCount; col++ ) {
-            // Again, check if there is an ID in the cell...
-            if ( board[ row ][ col ].id ) {
-                // ...and if so, then were all the cells below this ID empty?
-                if ( test.get( board[ row ][ col ] ) ) {
-                    // If so, then move the ID down a row.
-                    board[ row + 1 ][ col ] = board[ row ][ col ];
-                    board[ row ][ col ].id = 0;
-                    board[ row ][ col ].color = 'white';
-                }
-            }
+      }
+  
+      console.log(test);
+      // Now, loop through the test list to see if we need to drop any cells down.
+      for ( col = 0; col < colCount; col++ ) {
+        // Again, check if there is an ID in the cell...
+        if ( board[ row ][ col ].id ) {
+          // ...and if so, then were all the cells below this ID empty?
+          if ( test.get( board[ row ][ col ].id ) &&  board[ row ][ col ].id !== 0){
+            // If so, then move the ID down a row.
+            // console.log('Movemos id una casilla debajo: ', board[ row ][ col ].id );
+            // board[ row - 1 ][ col ].color = board[ row ][ col ].color;
+            // board[ row ][ col ].color = 'white';
+          }
         }
+      }
     }
     console.log(board);
     return board;
-}
+  }
+  
 
 function initLeftClickHandler(e) {
     const elementClicked = getElementClicked(e, myBoardObjects);
-    console.log('Click izd en: ', elementClicked);
+    console.log('Left click on: ', elementClicked);
 }
 
 function initRightClickHandler(e) {
     e.preventDefault();
     const elementClicked = getElementClicked(e, myBoardObjects);
-    console.log('Click dch en: ', elementClicked);
+    console.log('Right click on: ', elementClicked);
     deleteItem(myBoardObjects, elementClicked.id);
 }
 
