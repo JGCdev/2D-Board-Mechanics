@@ -233,27 +233,47 @@ function selectLastPjCoordsFromColumna(col) {
     for ( let i = 0; i < myBoardObjects.length; i++){
         if (myBoardObjects[i][col].id !== 0) {
             selectedPj = myBoardObjects[i][col].id;
-            return {x: col, y: i};
+            return {x: i, y: col};
         }
     }
     return null;
 }
 
 function paintSelected(coordsSelected ) {
-    const element = myBoardObjects[coordsSelected.y][coordsSelected.x];
-    console.log('elemento selecc', element);
+    const element = myBoardObjects[coordsSelected.x][coordsSelected.y];
     ctx.strokeStyle = "RED";
     if (element.type === 3) {
-        ctx.strokeRect(coordsSelected.x*SQ,coordsSelected.y*SQ,2*SQ,2*SQ);
+        ctx.strokeRect(coordsSelected.y*SQ,coordsSelected.x*SQ,2*SQ,2*SQ);
     } else {
-        ctx.strokeRect(coordsSelected.x*SQ,coordsSelected.y*SQ,SQ,SQ);
+        ctx.strokeRect(coordsSelected.y*SQ,coordsSelected.x*SQ,SQ,SQ);
     }
 }
 
+// comprueba si el elemento tiene algo encima y si es doble también en la siguiente fila
 function esSeleccionable(coords) {
-    const element = myBoardObjects[coords.y][coords.x];
-    console.log('es seleccionable el elemento: ', element);
-    // comprobar si tiene algo encima, en la propia fila si es único y en la suya y la siguiente si es doble
+    const element = myBoardObjects[coords.x][coords.y];
+    const rowDesde = coords.x - 1;
+    const colAnalizar = coords.y;
+
+    if (element.type === 3) {
+        // Comprobamos su fila y la siguiente
+        for (let i = rowDesde; i >= 0; i--) {
+            for (let j = colAnalizar; j <= colAnalizar+1; j++) {
+                if (myBoardObjects[i][j].id !== 0) {
+                    console.log({x: i, y: colAnalizar});
+                    return false;
+                }
+            }
+        }
+    } else {
+        // Comprobamos su fila
+        for (let i = rowDesde; i >= 0; i--) {
+            if (myBoardObjects[i][colAnalizar].id !== 0) {
+                console.log({x: i, y: colAnalizar});
+                return false;
+            }
+        }
+    }
 
     return true;
 }
@@ -269,7 +289,7 @@ function initLeftClickHandler(e) {
     } else {
         lastColumna = columnaPulsada;
         const coordsSelected = selectLastPjCoordsFromColumna(columnaPulsada);
-        console.log('coords del pj', coordsSelected);
+        console.log('coords del pj a seleccionar: ', coordsSelected);
         if (coordsSelected !== null && esSeleccionable(coordsSelected)) {
             paintSelected(coordsSelected );
         }
