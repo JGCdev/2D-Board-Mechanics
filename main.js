@@ -6,7 +6,8 @@ const elemTop = cvs.offsetTop;
 const SQ = 60;
 const rows = 6;
 const cols = 8;
-let lastclickIzd = null;
+let lastColumna = null;
+
 // Init event handlers
 cvs.addEventListener('click', initLeftClickHandler);
 cvs.addEventListener('contextmenu', initRightClickHandler);
@@ -224,35 +225,56 @@ function shiftCells( board ) {
 function mover(id, col) {
     console.log('Mover id: ', id);
     console.log('hasta col: ', col);
+    // Por desarrollar movimiento de figuras
+}
+
+function selectLastPjCoordsFromColumna(col) {
+    let selectedPj = null;
+    for ( let i = 0; i < myBoardObjects.length; i++){
+        if (myBoardObjects[i][col].id !== 0) {
+            selectedPj = myBoardObjects[i][col].id;
+            return {x: col, y: i};
+        }
+    }
+    return null;
+}
+
+function paintSelected(coordsSelected ) {
+    const element = myBoardObjects[coordsSelected.y][coordsSelected.x];
+    console.log('elemento selecc', element);
+    ctx.strokeStyle = "RED";
+    if (element.type === 3) {
+        ctx.strokeRect(coordsSelected.x*SQ,coordsSelected.y*SQ,2*SQ,2*SQ);
+    } else {
+        ctx.strokeRect(coordsSelected.x*SQ,coordsSelected.y*SQ,SQ,SQ);
+    }
+}
+
+function esSeleccionable(coords) {
+    const element = myBoardObjects[coords.y][coords.x];
+    console.log('es seleccionable el elemento: ', element);
+    // comprobar si tiene algo encima, en la propia fila si es único y en la suya y la siguiente si es doble
+
+    return true;
 }
 
 function initLeftClickHandler(e) {
     const coords = getElementClicked(e, myBoardObjects);
     const elementClicked = myBoardObjects[coords.x][coords.y];
+    const columnaPulsada = coords.y;
 
-    if (lastclickIzd !== null) {
-        mover(lastclickIzd.id, coords.y);
-        lastclickIzd = null;
+    if (lastColumna !== null) {
+        mover(lastColumna, columnaPulsada);
+        lastColumna = null;
     } else {
-        lastclickIzd = elementClicked;
-        let idAlreadyPainted = [];
-        for ( let r = 0; r < rows; r++){
-            for( let c = 0; c < cols; c++){
-                if (myBoardObjects[r][c].id === elementClicked.id 
-                    && !idAlreadyPainted.includes(elementClicked.id)
-                    && elementClicked.id !== 0) {
-                    ctx.strokeStyle = "RED";
-                    if (elementClicked.type === 3) {
-                        idAlreadyPainted.push(elementClicked.id);
-                        ctx.strokeRect(c*SQ,r*SQ,2*SQ,2*SQ);
-                    } else {
-                        ctx.strokeRect(c*SQ,r*SQ,SQ,SQ);
-                    }
-                }
-            }
+        lastColumna = columnaPulsada;
+        const coordsSelected = selectLastPjCoordsFromColumna(columnaPulsada);
+        console.log('coords del pj', coordsSelected);
+        if (coordsSelected !== null && esSeleccionable(coordsSelected)) {
+            paintSelected(coordsSelected );
         }
     }
-    
+
     console.log('Left click on: ', elementClicked);
 }
 
