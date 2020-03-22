@@ -1,8 +1,8 @@
 // Init required variables and board config
 const cvs = document.getElementById("board");
 const ctx = cvs.getContext("2d");
-let elemLeft = cvs.offsetLeft;
-let elemTop = cvs.offsetTop;
+const elemLeft = cvs.offsetLeft;
+const elemTop = cvs.offsetTop;
 const SQ = squareSize = 60;
 const rows = 6;
 const cols = 8;
@@ -11,7 +11,7 @@ const cols = 8;
 cvs.addEventListener('click', initLeftClickHandler);
 cvs.addEventListener('contextmenu', initRightClickHandler);
 
-// Sustituir con lógica de rellenado
+// Example PJ's with ID's
 const pjsBoard = [
     {
         name: 'null',
@@ -89,8 +89,6 @@ myBoardObjects = [
     [ pjsBoard[0], pjsBoard[5], pjsBoard[0], pjsBoard[6], pjsBoard[8], pjsBoard[0], pjsBoard[9], pjsBoard[10] ]
 ];
 
-console.log(myBoardObjects);
-
 printBoard(myBoardObjects);
 
 function printBoard(board) {
@@ -123,15 +121,23 @@ function deleteItem(board, id) {
 function shiftCells( board ) {
     let rowCount = board.length;
     let colCount = board[0].length;
-    
+
     for ( row = rowCount - 2; 0 <= row; row-- ) {
         let test = new Map();
         for ( col = 0; col < colCount; col++ ) {
         // Check if there is an ID in the cell...
             if ( board[ row ][ col ].id ) {
+                
                 // ...and if so, then accumulate whether all cells below this ID are empty.
-                let currentTest = test.get( board[ row ][ col ].id ) === 0 ? true : test.get( board[ row ][ col ].id );
-                test.set( board[ row ][ col ].id, currentTest && ( board[ row + 1 ][ col ].id === 0 ) );
+                let currentTest;
+                if (test.get( board[ row ][ col ] ) === undefined) {
+                    currentTest = true;
+                } else {
+                    currentTest = test.get( board[ row ][ col ] );
+                }
+                console.log(test.get( board[ row ][ col ]));
+                test.set( board[ row ][ col ], currentTest && ( board[ row + 1 ][ col ].id === 0 ) );
+
             }
         }
 
@@ -140,10 +146,11 @@ function shiftCells( board ) {
             // Again, check if there is an ID in the cell...
             if ( board[ row ][ col ].id ) {
                 // ...and if so, then were all the cells below this ID empty?
-                if ( test.get( board[ row ][ col ].id ) ) {
-                // If so, then move the ID down a row.
-                board[ row + 1 ][ col ].id = board[ row ][ col ].id;
-                board[ row ][ col ].id = 0;
+                if ( test.get( board[ row ][ col ] ) ) {
+                    // If so, then move the ID down a row.
+                    board[ row + 1 ][ col ] = board[ row ][ col ];
+                    board[ row ][ col ].id = 0;
+                    board[ row ][ col ].color = 'white';
                 }
             }
         }
