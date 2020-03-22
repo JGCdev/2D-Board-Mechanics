@@ -3,7 +3,7 @@ const cvs = document.getElementById("board");
 const ctx = cvs.getContext("2d");
 const elemLeft = cvs.offsetLeft;
 const elemTop = cvs.offsetTop;
-const SQ = squareSize = 60;
+const SQ = 60;
 const rows = 6;
 const cols = 8;
 
@@ -122,34 +122,37 @@ function deleteItem(board, id) {
 function shiftCells( board ) {
     let rowCount = board.length;
     let colCount = board[0].length;
+    let nullItem =     {
+        name: 'null',
+        id: 0,
+        color: 'white'
+    }
+    
     for ( row = rowCount - 2; 0 <= row; row-- ) {
       let test = new Map();
       for ( col = 0; col < colCount; col++ ) {
+          console.log(test);
         // Check if there is an ID in the cell...
-        if ( board[ row ][ col ].id ) {
+        if ( board[ row ][ col ] ) {
           // ...and if so, then accumulate whether all cells below this ID are empty.
-          let currentTest = test.get( board[ row ][ col ].id ) == undefined ? true : test.get( board[ row ][ col ].id );
-          test.set( board[ row ][ col ].id, currentTest && ( board[ row + 1 ][ col ].id === 0 ) );
+          let currentTest = test.get( board[ row ][ col ] ) == undefined ? true : test.get( board[ row ][ col ] );
+          test.set( board[ row ][ col ], currentTest && ( board[ row + 1 ][ col ].id == 0 ) );
         }
       }
   
-      console.log(test);
       // Now, loop through the test list to see if we need to drop any cells down.
       for ( col = 0; col < colCount; col++ ) {
         // Again, check if there is an ID in the cell...
-        if ( board[ row ][ col ].id ) {
+        if ( board[ row ][ col ] ) {
           // ...and if so, then were all the cells below this ID empty?
-          if ( test.get( board[ row ][ col ].id ) &&  board[ row ][ col ].id !== 0){
-            // If so, then move the ID down a row.
-            // console.log('Movemos id una casilla debajo: ', board[ row ][ col ].id );
-            // board[ row - 1 ][ col ].color = board[ row ][ col ].color;
-            // board[ row ][ col ].color = 'white';
+          if ( test.get( board[ row ][ col ] ) ) {
+            board[ row + 1 ][ col ] = board[ row ][ col ];
+            board[ row ][ col ] = nullItem;
           }
         }
       }
     }
-    console.log(board);
-    return board;
+    return board
   }
   
 
@@ -159,10 +162,12 @@ function initLeftClickHandler(e) {
 }
 
 function initRightClickHandler(e) {
-    e.preventDefault();
-    const elementClicked = getElementClicked(e, myBoardObjects);
-    console.log('Right click on: ', elementClicked);
-    deleteItem(myBoardObjects, elementClicked.id);
+    if (e !== undefined) {
+        e.preventDefault();
+        const elementClicked = getElementClicked(e, myBoardObjects);
+        console.log('Right click on: ', elementClicked);
+        deleteItem(myBoardObjects, elementClicked.id);
+    }
 }
 
 function getElementClicked(e, board) {
@@ -171,10 +176,10 @@ function getElementClicked(e, board) {
 
     for ( let r = 0; r < board.length; r++){
         for( let c = 0; c < board[r].length; c++){
-            const elemTop = squareSize * r;
-            const elemLeft = squareSize * c;
-            if (y > elemTop && y < elemTop + squareSize 
-                && x > elemLeft && x < elemLeft + squareSize) {
+            const elemTop = SQ * r;
+            const elemLeft = SQ * c;
+            if (y > elemTop && y < elemTop + SQ 
+                && x > elemLeft && x < elemLeft + SQ) {
                 return board[r][c];
             }
         }
