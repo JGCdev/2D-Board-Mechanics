@@ -89,6 +89,7 @@ myBoardObjects = [
     [ pjsBoard[0], pjsBoard[6], pjsBoard[0], pjsBoard[7], pjsBoard[8], pjsBoard[0], pjsBoard[9], pjsBoard[10] ]
 ];
 
+
 printBoard(myBoardObjects);
 
 function printBoard(board) {
@@ -114,9 +115,11 @@ function deleteItem(board, id) {
             }
         }
     }
+
     board = shiftCells(board);
     printBoard(board);
 }
+
 
 
 function shiftCells( board ) {
@@ -127,30 +130,31 @@ function shiftCells( board ) {
         id: 0,
         color: 'white'
     }
-    
-    for ( row = rowCount - 2; 0 <= row; row-- ) {
-      let test = new Map();
-      for ( col = 0; col < colCount; col++ ) {
-          console.log(test);
-        // Check if there is an ID in the cell...
-        if ( board[ row ][ col ] ) {
-          // ...and if so, then accumulate whether all cells below this ID are empty.
-          let currentTest = test.get( board[ row ][ col ] ) == undefined ? true : test.get( board[ row ][ col ] );
-          test.set( board[ row ][ col ], currentTest && ( board[ row + 1 ][ col ].id == 0 ) );
+
+    for (let i = 0; i < rowCount - 2; i++) {
+        for ( row = rowCount - 2; 0 <= row; row-- ) {
+            let test = new Map();
+            for ( col = 0; col < colCount; col++ ) {
+              // Check if there is an ID in the cell...
+              if ( board[ row ][ col ].id ) {
+                // ...and if so, then accumulate whether all cells below this ID are empty.
+                let currentTest = test.get( board[ row ][ col ]  ) == undefined ? true : test.get( board[ row ][ col ] );
+                test.set( board[ row ][ col ], currentTest && ( board[ row + 1 ][ col ].id == 0 ) );
+              }
+            }
+        
+            // Now, loop through the test list to see if we need to drop any cells down.
+            for ( col = 0; col < colCount; col++ ) {
+              // Again, check if there is an ID in the cell...
+              if ( board[ row ][ col ].id ) {
+                // ...and if so, then were all the cells below this ID empty?
+                if ( test.get( board[ row ][ col ] ) ) {
+                  board[ row + 1 ][ col ] = board[ row ][ col ];
+                  board[ row ][ col ] = nullItem;
+                } 
+              }
+            }
         }
-      }
-  
-      // Now, loop through the test list to see if we need to drop any cells down.
-      for ( col = 0; col < colCount; col++ ) {
-        // Again, check if there is an ID in the cell...
-        if ( board[ row ][ col ] ) {
-          // ...and if so, then were all the cells below this ID empty?
-          if ( test.get( board[ row ][ col ] ) ) {
-            board[ row + 1 ][ col ] = board[ row ][ col ];
-            board[ row ][ col ] = nullItem;
-          }
-        }
-      }
     }
     return board
   }
@@ -162,9 +166,10 @@ function initLeftClickHandler(e) {
 }
 
 function initRightClickHandler(e) {
-    if (e !== undefined) {
-        e.preventDefault();
-        const elementClicked = getElementClicked(e, myBoardObjects);
+
+    e.preventDefault();
+    const elementClicked = getElementClicked(e, myBoardObjects);
+    if (elementClicked !== undefined) {
         console.log('Right click on: ', elementClicked);
         deleteItem(myBoardObjects, elementClicked.id);
     }
