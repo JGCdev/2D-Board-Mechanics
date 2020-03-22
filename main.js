@@ -131,7 +131,7 @@ function shiftCells( board ) {
         color: 'white'
     }
 
-    for (let i = 0; i < rowCount - 2; i++) {
+    for (let i = 0; i < rowCount - 1; i++) {
         for ( row = rowCount - 2; 0 <= row; row-- ) {
             let test = new Map();
             for ( col = 0; col < colCount; col++ ) {
