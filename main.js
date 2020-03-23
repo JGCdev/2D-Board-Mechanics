@@ -174,7 +174,6 @@ function deleteItem(board, id) {
             }
         }
     }
-
     shiftCells(board);
     printBoard(board);
 }
@@ -183,8 +182,8 @@ function shiftCells( board ) {
     console.log('shift cells on: ', board);
     let rowCount = board.length;
     let colCount = board[0].length;
-
-    // Entender este loop para poder seguir trabajando
+    // Funcion que comprueba si hay null debajo para poder bajar elementos del tablero
+    // La repetimos tantas veces como rows -1 para asegurarnos que bajamos un item que esté en posición 0
     for (let i = 0; i < rowCount - 1; i++) {
         for ( row = rowCount - 2; 0 <= row; row-- ) {
             let test = new Map();
@@ -222,10 +221,9 @@ function mover(pj, coordsPj, col) {
     console.log('Mover id: ', pj.id);
     console.log('hasta col: ', col);
     if (pj.type === 3) {
-        // Si están vacíos los 4 primeros elementos de la fila
+        // Si hacemos click en última columna nos lo llevamos a la anterior
         if (col === cols - 1) {
             col--;
-            console.log('has hecho click en la ultima columna');
         }
         if (myBoardObjects[0][col].id === 0 
             && myBoardObjects[0][col + 1].id === 0 
@@ -246,14 +244,12 @@ function mover(pj, coordsPj, col) {
                 myBoardObjects[1][col + 1] = pj;
         }
     } else {
+        // Si la primera casilla está vacía lo colocamos allí y shifteamos
         if (myBoardObjects[0][col].id === 0) {
-            console.log('añadimos pj arriba');
             myBoardObjects[0][col] = pj;
             myBoardObjects[coordsPj.x][coordsPj.y] = pjsBoard[0]; 
         }
-    
     }
-
 
     shiftCells(myBoardObjects);
     printBoard(myBoardObjects);
@@ -274,13 +270,7 @@ function paintSelected(coordsSelected ) {
     const element = myBoardObjects[coordsSelected.x][coordsSelected.y];
     ctx.strokeStyle = "RED";
     if (element.type === 3) {
-        // Comprobamos si hay que pintar hacia izd o derecha
-        // if (myBoardObjects[coordsSelected.x][coordsSelected.y + 1].id === element.id) {
-        //     console.log('no movemos');
-            ctx.strokeRect(coordsSelected.y*SQ,coordsSelected.x*SQ,2*SQ,2*SQ);
-        // } else {
-        //     ctx.strokeRect((coordsSelected.y - 1) * SQ, coordsSelected.x * SQ ,2*SQ,2*SQ);
-        // }
+        ctx.strokeRect(coordsSelected.y*SQ,coordsSelected.x*SQ,2*SQ,2*SQ);
     } else {
         ctx.strokeRect(coordsSelected.y*SQ,coordsSelected.x*SQ,SQ,SQ);
     }
@@ -343,8 +333,6 @@ function initLeftClickHandler(e) {
         }
         console.log('Left click on: ', elementClicked);
     }
-   
-
 }
 
 function initRightClickHandler(e) {
