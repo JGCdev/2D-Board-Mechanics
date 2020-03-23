@@ -16,7 +16,7 @@ const imagesArray = [
     'assets/img/demon1.png',
     'assets/img/demon2.png',
     'assets/img/bosslava1.png'
-]
+];
 
 const pjsBoard = [
     {
@@ -98,8 +98,7 @@ const pjsBoard = [
         color: 'red',
         type: 3
     },
-]
-
+];
 
 myBoardObjects = [
     [ pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[1], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
@@ -123,6 +122,7 @@ printBoard(myBoardObjects);
 
 
 function printBoard(board) {
+    console.log('pintamos', board);
     // Guardamos ID's de grandes que ya se han pintado
     const idsGrandesPintados = [];
     // Limpiamos antes de repintar
@@ -174,21 +174,16 @@ function deleteItem(board, id) {
             }
         }
     }
-
-    board = shiftCells(board);
+    shiftCells(board);
     printBoard(board);
 }
 
 function shiftCells( board ) {
+    console.log('shift cells on: ', board);
     let rowCount = board.length;
     let colCount = board[0].length;
-    let nullItem =     {
-        name: 'null',
-        id: 0,
-        color: 'white'
-    }
-
-    // Entender este loop para poder seguir trabajando
+    // Funcion que comprueba si hay null debajo para poder bajar elementos del tablero
+    // La repetimos tantas veces como rows -1 para asegurarnos que bajamos un item que esté en posición 0
     for (let i = 0; i < rowCount - 1; i++) {
         for ( row = rowCount - 2; 0 <= row; row-- ) {
             let test = new Map();
@@ -213,7 +208,7 @@ function shiftCells( board ) {
                 // ...and if so, then were all the cells below this ID empty?
                 if ( test.get( board[ row ][ col ] ) ) {
                   board[ row + 1 ][ col ] = board[ row ][ col ];
-                  board[ row ][ col ] = nullItem;
+                  board[ row ][ col ] = pjsBoard[0];
                 } 
               }
             }
@@ -222,10 +217,42 @@ function shiftCells( board ) {
     return board
   }
   
-function mover(id, col) {
-    console.log('Mover id: ', id);
+function mover(pj, coordsPj, col) {
+    console.log('Mover id: ', pj.id);
     console.log('hasta col: ', col);
-    // Por desarrollar movimiento de figuras
+    if (pj.type === 3) {
+        // Si hacemos click en última columna nos lo llevamos a la anterior
+        if (col === cols - 1) {
+            col--;
+        }
+        if (myBoardObjects[0][col].id === 0 
+            && myBoardObjects[0][col + 1].id === 0 
+            && myBoardObjects[1][col].id === 0 
+            && myBoardObjects[1][col + 1].id === 0 ) {
+                for (let i = 0; i < myBoardObjects.length; i++ ) {
+                    for (let j = 0; j < cols; j++) {
+                        if (myBoardObjects[i][j].id === pj.id) {
+                            // Eliminamos el obj en posición anterior
+                            myBoardObjects[i][j] = pjsBoard[0];
+                        }
+                    }
+                }
+                // Volvemos a incluir en su nueva posición
+                myBoardObjects[0][col] = pj;
+                myBoardObjects[0][col + 1] = pj;
+                myBoardObjects[1][col] = pj;
+                myBoardObjects[1][col + 1] = pj;
+        }
+    } else {
+        // Si la primera casilla está vacía lo colocamos allí y shifteamos
+        if (myBoardObjects[0][col].id === 0) {
+            myBoardObjects[0][col] = pj;
+            myBoardObjects[coordsPj.x][coordsPj.y] = pjsBoard[0]; 
+        }
+    }
+
+    shiftCells(myBoardObjects);
+    printBoard(myBoardObjects);
 }
 
 function selectLastPjCoordsFromColumna(col) {
@@ -280,26 +307,35 @@ function esSeleccionable(coords) {
 
 function initLeftClickHandler(e) {
     const coords = getElementClicked(e, myBoardObjects);
-    const elementClicked = myBoardObjects[coords.x][coords.y];
-    const columnaPulsada = coords.y;
-
-    if (lastColumna !== null) {
-        mover(lastColumna, columnaPulsada);
-        lastColumna = null;
-    } else {
-        lastColumna = columnaPulsada;
-        const coordsSelected = selectLastPjCoordsFromColumna(columnaPulsada);
-        console.log('coords del pj a seleccionar: ', coordsSelected);
-        if (coordsSelected !== null && esSeleccionable(coordsSelected)) {
-            paintSelected(coordsSelected );
+    if (coords !== undefined) {
+        const elementClicked = myBoardObjects[coords.x][coords.y];
+        const columnaPulsada = coords.y;
+        
+        if (lastColumna !== null) {
+            const coordsSelected = selectLastPjCoordsFromColumna(lastColumna);
+            mover(myBoardObjects[coordsSelected.x][coordsSelected.y], coordsSelected, columnaPulsada);
+            lastColumna = null;
+        } else {
+            const coordsSelected = selectLastPjCoordsFromColumna(columnaPulsada);
+            // Si seleccionamos la columna derecha de un pj, cambiamos coords base a su izq para operar
+            if (coordsSelected !== null) {
+                if (myBoardObjects[coordsSelected.x][coordsSelected.y + 1].id !== myBoardObjects[coordsSelected.x][coordsSelected.y].id 
+                    && myBoardObjects[coordsSelected.x][coordsSelected.y].type === 3) {
+                    coordsSelected.y--;
+                }
+                console.log('coords seleccionado: ', coordsSelected);
+                if (coordsSelected !== null && esSeleccionable(coordsSelected)) {
+                    // Nos aseguramos de cambio para guardar la variable y pintamos
+                    lastColumna = columnaPulsada;
+                    paintSelected(coordsSelected);
+                }
+            }
         }
+        console.log('Left click on: ', elementClicked);
     }
-
-    console.log('Left click on: ', elementClicked);
 }
 
 function initRightClickHandler(e) {
-
     e.preventDefault();
     const coords = getElementClicked(e, myBoardObjects);
     const elementClicked = myBoardObjects[coords.x][coords.y];
