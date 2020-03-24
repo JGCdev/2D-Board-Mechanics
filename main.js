@@ -165,7 +165,44 @@ function drawSquare(x, y, player, ids){
         ctx.strokeRect(x*SQ,y*SQ,SQ,SQ);
     }
 }
+  
+function mover(pj, coordsPj, col) {
+    console.log('Mover id: ', pj.id);
+    console.log('hasta col: ', col);
+    if (pj.type === 3) {
+        // Si hacemos click en última columna nos lo llevamos a la anterior
+        if (col === cols - 1) {
+            col--;
+        }
+        if (myBoardObjects[0][col].id === 0 || myBoardObjects[0][col].id === pj.id
+            && myBoardObjects[0][col + 1].id === 0 
+            && myBoardObjects[1][col].id === 0 || myBoardObjects[1][col].id === pj.id
+            && myBoardObjects[1][col + 1].id === 0 ) {
+                for (let i = 0; i < myBoardObjects.length; i++ ) {
+                    for (let j = 0; j < cols; j++) {
+                        if (myBoardObjects[i][j].id === pj.id) {
+                            // Eliminamos el obj en posición anterior
+                            myBoardObjects[i][j] = pjsBoard[0];
+                        }
+                    }
+                }
+                // Volvemos a incluir en su nueva posición
+                myBoardObjects[0][col] = pj;
+                myBoardObjects[0][col + 1] = pj;
+                myBoardObjects[1][col] = pj;
+                myBoardObjects[1][col + 1] = pj;
+        }
+    } else {
+        // Si la primera casilla está vacía lo colocamos allí y shifteamos
+        if (myBoardObjects[0][col].id === 0) {
+            myBoardObjects[0][col] = pj;
+            myBoardObjects[coordsPj.x][coordsPj.y] = pjsBoard[0]; 
+        }
+    }
 
+    shiftCells(myBoardObjects);
+    printBoard(myBoardObjects);
+}
 function deleteItem(board, id) {
     for ( let r = 0; r < rows; r++){
         for( let c = 0; c < cols; c++){
@@ -215,44 +252,6 @@ function shiftCells( board ) {
         }
     }
     return board
-  }
-  
-function mover(pj, coordsPj, col) {
-    console.log('Mover id: ', pj.id);
-    console.log('hasta col: ', col);
-    if (pj.type === 3) {
-        // Si hacemos click en última columna nos lo llevamos a la anterior
-        if (col === cols - 1) {
-            col--;
-        }
-        if (myBoardObjects[0][col].id === 0 
-            && myBoardObjects[0][col + 1].id === 0 
-            && myBoardObjects[1][col].id === 0 
-            && myBoardObjects[1][col + 1].id === 0 ) {
-                for (let i = 0; i < myBoardObjects.length; i++ ) {
-                    for (let j = 0; j < cols; j++) {
-                        if (myBoardObjects[i][j].id === pj.id) {
-                            // Eliminamos el obj en posición anterior
-                            myBoardObjects[i][j] = pjsBoard[0];
-                        }
-                    }
-                }
-                // Volvemos a incluir en su nueva posición
-                myBoardObjects[0][col] = pj;
-                myBoardObjects[0][col + 1] = pj;
-                myBoardObjects[1][col] = pj;
-                myBoardObjects[1][col + 1] = pj;
-        }
-    } else {
-        // Si la primera casilla está vacía lo colocamos allí y shifteamos
-        if (myBoardObjects[0][col].id === 0) {
-            myBoardObjects[0][col] = pj;
-            myBoardObjects[coordsPj.x][coordsPj.y] = pjsBoard[0]; 
-        }
-    }
-
-    shiftCells(myBoardObjects);
-    printBoard(myBoardObjects);
 }
 
 function selectLastPjCoordsFromColumna(col) {
