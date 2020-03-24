@@ -199,10 +199,10 @@ function mover(pj, coordsPj, col) {
             myBoardObjects[coordsPj.x][coordsPj.y] = pjsBoard[0]; 
         }
     }
-
     shiftCells(myBoardObjects);
     printBoard(myBoardObjects);
 }
+
 function deleteItem(board, id) {
     for ( let r = 0; r < rows; r++){
         for( let c = 0; c < cols; c++){
@@ -318,8 +318,9 @@ function initLeftClickHandler(e) {
             const coordsSelected = selectLastPjCoordsFromColumna(columnaPulsada);
             // Si seleccionamos la columna derecha de un pj, cambiamos coords base a su izq para operar
             if (coordsSelected !== null) {
-                if (myBoardObjects[coordsSelected.x][coordsSelected.y + 1].id !== myBoardObjects[coordsSelected.x][coordsSelected.y].id 
-                    && myBoardObjects[coordsSelected.x][coordsSelected.y].type === 3) {
+                if (myBoardObjects[coordsSelected.x][coordsSelected.y].type === 3 
+                    && myBoardObjects[coordsSelected.x][coordsSelected.y + 1].id !== myBoardObjects[coordsSelected.x][coordsSelected.y].id 
+                    ) {
                     coordsSelected.y--;
                 }
                 console.log('coords seleccionado: ', coordsSelected);
