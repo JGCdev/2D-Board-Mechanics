@@ -15,22 +15,83 @@ cvs.addEventListener('contextmenu', initRightClickHandler);
 const imagesArray = [
     'assets/img/demon1.png',
     'assets/img/demon2.png',
-    'assets/img/bosslava1.png'
+    'assets/img/hellhound.png',
+    'assets/img/bosslava1.png',
+    'assets/img/bosslava2.png'
 ];
+
+const razas = [
+    {
+        id: 0,
+        nombre: 'Demonios',
+        characters: [
+            'Hero 1', 'Hero 2'
+        ],
+        personajes: [
+            {
+                id: 0,
+                name: 'Hellhound',
+                img: 'assets/img/hellhound.png',
+                atk: 3,
+                def: 4,
+                type:1,
+                raza:0,
+
+            },
+            {
+                id: 1,
+                name: 'Demon',
+                img: 'assets/img/demon1.png',
+                atk: 3,
+                def: 4,
+                type:1,
+                raza:0,
+            },
+            {
+                id: 2,
+                name: 'Infernal Dog',
+                img: 'assets/img/demon2.png',
+                atk: 3,
+                def: 4,
+                type:1,
+                raza:0,
+            },
+            {
+                id: 3,
+                name: 'Boss Lava',
+                img: 'assets/img/bosslava1.png',
+                atk: 3,
+                def: 4,
+                type:3,
+                raza:0,
+            },
+            {
+                id: 4,
+                name: 'Dragon',
+                img: 'assets/img/bosslava2.png',
+                atk: 3,
+                def: 4,
+                type:3,
+                raza:0,
+            }
+        ]
+    }
+]
 
 const pjsBoard = [
     {
         name: 'null',
         id: 0,
         color: 'white',
-        type: 0
+        type: 0,
     },
     {
         name: 'Basic champ 1',
         id: 1,
         color: 'green',
-        image : null,
-        type: 1
+        type: 1,
+        raza: 0,
+        pjRaza: 1
     },
     {
         name: 'Basic champ 1',
@@ -145,7 +206,7 @@ function drawSquare(x, y, player, ids){
             img.src = imagesArray[1];
             break;
         case 3:
-            img.src = imagesArray[2];
+            img.src = imagesArray[4];
             break;
     }
 
@@ -338,11 +399,13 @@ function initLeftClickHandler(e) {
 function initRightClickHandler(e) {
     e.preventDefault();
     const coords = getElementClicked(e, myBoardObjects);
-    const elementClicked = myBoardObjects[coords.x][coords.y];
+    if (coords !== undefined || myBoardObjects[coords.x][coords.y].type === 0) {
+        const elementClicked = myBoardObjects[coords.x][coords.y];
 
-    if (elementClicked !== undefined) {
-        console.log('Right click on: ', elementClicked);
-        deleteItem(myBoardObjects, elementClicked.id);
+        if (elementClicked !== undefined) {
+            console.log('Right click on: ', elementClicked);
+            deleteItem(myBoardObjects, elementClicked.id);
+        }
     }
 }
 
