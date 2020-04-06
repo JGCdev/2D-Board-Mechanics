@@ -1,1 +1,3 @@
-# 2D Board Game Idea based on Might and Magic Clash of Heroes. 
+# 2D Board Game Idea 
+
+Testing with HTML5 Canvas API and plain JS, HTML + CSS
