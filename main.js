@@ -197,7 +197,7 @@ function printBoard(board) {
 
 function drawSquare(x, y, player, ids){
     var img = new Image();
-    ctx.strokeStyle = "BLACK";
+    ctx.strokeStyle = "WHITE";
     switch (player.type) {
         case 1:
             img.src = imagesArray[0];
