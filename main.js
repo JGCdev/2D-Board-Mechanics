@@ -12,11 +12,13 @@ let lastColumna = null;
 cvs.addEventListener('click', initLeftClickHandler);
 cvs.addEventListener('contextmenu', initRightClickHandler);
 
+
+// Hay que meter elementos dobles como súcubo a la creación y lógica del juego
 const imagesArray = [
     'assets/img/demon1.png',
     'assets/img/demon2.png',
     'assets/img/hellhound.png',
-    'assets/img/bosslava1.png',
+    'assets/img/sucubo.png',
     'assets/img/bosslava2.png'
 ];
 
@@ -59,7 +61,7 @@ const razas = [
             {
                 id: 3,
                 name: 'Boss Lava',
-                img: 'assets/img/bosslava1.png',
+                img: 'assets/img/sucubo.png',
                 atk: 3,
                 def: 4,
                 type:3,
@@ -115,7 +117,7 @@ const pjsBoard = [
         name: 'Basic champ 1',
         id: 5,
         color: 'green',
-        type: 2
+        type: 1
     },
     {
         name: 'Basic champ 1',
@@ -133,7 +135,7 @@ const pjsBoard = [
         name: 'Basic champ 1',
         id: 8,
         color: 'green',
-        type: 2
+        type: 1
     },
     {
         name: 'Basic champ 1',
@@ -203,7 +205,7 @@ function drawSquare(x, y, player, ids){
             img.src = imagesArray[0];
             break;
         case 2:
-            img.src = imagesArray[1];
+            img.src = imagesArray[3];
             break;
         case 3:
             img.src = imagesArray[4];
