@@ -22,63 +22,63 @@ const imagesArray = [
     'assets/img/bosslava2.png'
 ];
 
-const razas = [
-    {
-        id: 0,
-        nombre: 'Demonios',
-        characters: [
-            'Hero 1', 'Hero 2'
-        ],
-        personajes: [
-            {
-                id: 0,
-                name: 'Hellhound',
-                img: 'assets/img/hellhound.png',
-                atk: 3,
-                def: 4,
-                type:1,
-                raza:0,
+// const razas = [
+//     {
+//         id: 0,
+//         nombre: 'Demonios',
+//         characters: [
+//             'Hero 1', 'Hero 2'
+//         ],
+//         personajes: [
+//             {
+//                 id: 0,
+//                 name: 'Hellhound',
+//                 img: 'assets/img/hellhound.png',
+//                 atk: 3,
+//                 def: 4,
+//                 type:1,
+//                 raza:0,
 
-            },
-            {
-                id: 1,
-                name: 'Demon',
-                img: 'assets/img/demon1.png',
-                atk: 3,
-                def: 4,
-                type:1,
-                raza:0,
-            },
-            {
-                id: 2,
-                name: 'Infernal Dog',
-                img: 'assets/img/demon2.png',
-                atk: 3,
-                def: 4,
-                type:1,
-                raza:0,
-            },
-            {
-                id: 3,
-                name: 'Boss Lava',
-                img: 'assets/img/sucubo.png',
-                atk: 3,
-                def: 4,
-                type:3,
-                raza:0,
-            },
-            {
-                id: 4,
-                name: 'Dragon',
-                img: 'assets/img/bosslava2.png',
-                atk: 3,
-                def: 4,
-                type:3,
-                raza:0,
-            }
-        ]
-    }
-]
+//             },
+//             {
+//                 id: 1,
+//                 name: 'Demon',
+//                 img: 'assets/img/demon1.png',
+//                 atk: 3,
+//                 def: 4,
+//                 type:1,
+//                 raza:0,
+//             },
+//             {
+//                 id: 2,
+//                 name: 'Infernal Dog',
+//                 img: 'assets/img/demon2.png',
+//                 atk: 3,
+//                 def: 4,
+//                 type:1,
+//                 raza:0,
+//             },
+//             {
+//                 id: 3,
+//                 name: 'Sucubo',
+//                 img: 'assets/img/sucubo.png',
+//                 atk: 3,
+//                 def: 4,
+//                 type:3,
+//                 raza:0,
+//             },
+//             {
+//                 id: 4,
+//                 name: 'Dragon',
+//                 img: 'assets/img/bosslava2.png',
+//                 atk: 3,
+//                 def: 4,
+//                 type:3,
+//                 raza:0,
+//             }
+//         ]
+//     }
+// ]
 
 const pjsBoard = [
     {
@@ -167,22 +167,12 @@ myBoardObjects = [
     [ pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[1], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
     [ pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[11], pjsBoard[11], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
     [ pjsBoard[0], pjsBoard[0], pjsBoard[2], pjsBoard[11], pjsBoard[11], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
-    [ pjsBoard[0], pjsBoard[0], pjsBoard[12], pjsBoard[12], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
-    [ pjsBoard[0], pjsBoard[3], pjsBoard[12], pjsBoard[12], pjsBoard[4], pjsBoard[0], pjsBoard[5], pjsBoard[0] ],
+    [ pjsBoard[0], pjsBoard[0], pjsBoard[12], pjsBoard[12], pjsBoard[4], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
+    [ pjsBoard[0], pjsBoard[3], pjsBoard[12], pjsBoard[12], pjsBoard[4], pjsBoard[0], pjsBoard[5], pjsBoard[10] ],
     [ pjsBoard[0], pjsBoard[6], pjsBoard[0], pjsBoard[7], pjsBoard[8], pjsBoard[0], pjsBoard[9], pjsBoard[10] ]
 ];
 
-// myBoardObjects = [
-//     [ pjsBoard[0], pjsBoard[0], pjsBoard[1], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
-//     [ pjsBoard[0], pjsBoard[11], pjsBoard[11], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
-//     [ pjsBoard[0], pjsBoard[11], pjsBoard[11], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
-//     [ pjsBoard[0], pjsBoard[2], pjsBoard[12], pjsBoard[12], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
-//     [ pjsBoard[0], pjsBoard[3], pjsBoard[12], pjsBoard[12], pjsBoard[4], pjsBoard[0], pjsBoard[5], pjsBoard[0] ],
-//     [ pjsBoard[0], pjsBoard[6], pjsBoard[0], pjsBoard[7], pjsBoard[8], pjsBoard[0], pjsBoard[9], pjsBoard[10] ]
-// ];
-
 printBoard(myBoardObjects);
-
 
 function printBoard(board) {
     console.log('pintamos', board);
@@ -218,13 +208,21 @@ function drawSquare(x, y, player, ids){
         };
         ctx.strokeRect(x*SQ,y*SQ,2*SQ,2*SQ);
         ids.push(player.id);
+
+    } else if (player.type === 2 && !ids.includes(player.id)) {
+        img.onload = function () {
+            ctx.drawImage(img, x*SQ, y*SQ, SQ, 2*SQ);
+        };
+        ctx.strokeRect(x*SQ,y*SQ,SQ,2*SQ);
+        ids.push(player.id);
+
     } else if (!ids.includes(player.id)) {
         img.onload = function () {
             ctx.drawImage(img, x*SQ,y*SQ, SQ, SQ);
         };
     } 
 
-    if (player.type !== 3) {
+    if (player.type !== 3 && player.type !== 2) {
         ctx.strokeRect(x*SQ,y*SQ,SQ,SQ);
     }
 }
@@ -254,6 +252,13 @@ function mover(pj, coordsPj, col) {
                 myBoardObjects[0][col + 1] = pj;
                 myBoardObjects[1][col] = pj;
                 myBoardObjects[1][col + 1] = pj;
+        }
+    } else if (pj.type === 2) {
+        if (myBoardObjects[0][col].id === 0 && myBoardObjects[1][col].id === 0) {
+            myBoardObjects[1][col] = pj;
+            myBoardObjects[0][col] = pj;
+            myBoardObjects[coordsPj.x + 1][coordsPj.y] = pjsBoard[0]; 
+            myBoardObjects[coordsPj.x][coordsPj.y] = pjsBoard[0]; 
         }
     } else {
         // Si la primera casilla está vacía lo colocamos allí y shifteamos
@@ -333,6 +338,8 @@ function paintSelected(coordsSelected ) {
     ctx.strokeStyle = "RED";
     if (element.type === 3) {
         ctx.strokeRect(coordsSelected.y*SQ,coordsSelected.x*SQ,2*SQ,2*SQ);
+    } else if (element.type === 2) {
+        ctx.strokeRect(coordsSelected.y*SQ,coordsSelected.x*SQ,SQ,2*SQ);
     } else {
         ctx.strokeRect(coordsSelected.y*SQ,coordsSelected.x*SQ,SQ,SQ);
     }
