@@ -1,4 +1,7 @@
-// Init required variables and board config
+// Testing con canvas y vanilla JS
+// Pediente refactorización de código - Movimientos combo / Defensa - Animaciones 
+
+// Inicialización de variables y configuración del tablero
 const cvs = document.getElementById("board");
 const ctx = cvs.getContext("2d");
 const elemLeft = cvs.offsetLeft;
@@ -13,7 +16,86 @@ cvs.addEventListener('click', initLeftClickHandler);
 cvs.addEventListener('contextmenu', initRightClickHandler);
 
 
-// Hay que meter elementos dobles como súcubo a la creación y lógica del juego
+// Implementar modelos de razas, heroes, pjs
+// Tener en cuenta todas posibilidades y colores
+// Pasar a archivo a modo de librería, JSON
+const razas = [
+    {
+        id: 0,
+        nombre: 'Demonios',
+        heroes: [
+            {
+                id: 0,
+                nombre: 'Sr Stark',
+                habilidad: 'Tormenta de fuego'
+            },
+            {
+                id: 1,
+                nombre: 'Dr World',
+                habilidad: 'Engullir'
+            }
+        ],
+        personajes: [
+            {
+                id: 0,
+                name: 'Hellhound',
+                img: 'assets/img/hellhound.png',
+                atk: 3,
+                def: 4,
+                type:1,
+                raza:0,
+
+            },
+            {
+                id: 1,
+                name: 'Demon',
+                img: 'assets/img/hellhound.png',
+                atk: 3,
+                def: 4,
+                type:1,
+                raza:0,
+            },
+            {
+                id: 2,
+                name: 'Dog',
+                img: 'assets/img/hellhound.png',
+                atk: 3,
+                def: 4,
+                type:1,
+                raza:0,
+            },
+            {
+                id: 3,
+                name: 'Sucubo',
+                img: 'assets/img/hellhound.png',
+                atk: 3,
+                def: 4,
+                type:1,
+                raza:0,
+            },
+            {
+                id: 4,
+                name: 'Abyss',
+                img: 'assets/img/hellhound.png',
+                atk: 3,
+                def: 4,
+                type:1,
+                raza:0,
+            },
+            {
+                id: 5,
+                name: 'Golem',
+                img: 'assets/img/hellhound.png',
+                atk: 3,
+                def: 4,
+                type:1,
+                raza:0,
+            },
+        ]
+    }
+];
+
+// Imagenes y modelo de PJ's provisionales para testing (eliminar)
 const imagesArray = [
     'assets/img/demon1.png',
     'assets/img/demon2.png',
@@ -21,64 +103,6 @@ const imagesArray = [
     'assets/img/sucubo.png',
     'assets/img/bosslava2.png'
 ];
-
-// const razas = [
-//     {
-//         id: 0,
-//         nombre: 'Demonios',
-//         characters: [
-//             'Hero 1', 'Hero 2'
-//         ],
-//         personajes: [
-//             {
-//                 id: 0,
-//                 name: 'Hellhound',
-//                 img: 'assets/img/hellhound.png',
-//                 atk: 3,
-//                 def: 4,
-//                 type:1,
-//                 raza:0,
-
-//             },
-//             {
-//                 id: 1,
-//                 name: 'Demon',
-//                 img: 'assets/img/demon1.png',
-//                 atk: 3,
-//                 def: 4,
-//                 type:1,
-//                 raza:0,
-//             },
-//             {
-//                 id: 2,
-//                 name: 'Infernal Dog',
-//                 img: 'assets/img/demon2.png',
-//                 atk: 3,
-//                 def: 4,
-//                 type:1,
-//                 raza:0,
-//             },
-//             {
-//                 id: 3,
-//                 name: 'Sucubo',
-//                 img: 'assets/img/sucubo.png',
-//                 atk: 3,
-//                 def: 4,
-//                 type:3,
-//                 raza:0,
-//             },
-//             {
-//                 id: 4,
-//                 name: 'Dragon',
-//                 img: 'assets/img/bosslava2.png',
-//                 atk: 3,
-//                 def: 4,
-//                 type:3,
-//                 raza:0,
-//             }
-//         ]
-//     }
-// ]
 
 const pjsBoard = [
     {
@@ -163,6 +187,7 @@ const pjsBoard = [
     },
 ];
 
+// La generación del tablero debe ser aleatoria en base a parámetros a definir
 myBoardObjects = [
     [ pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[1], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
     [ pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[11], pjsBoard[11], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
@@ -345,7 +370,7 @@ function paintSelected(coordsSelected ) {
     }
 }
 
-// comprueba si el elemento tiene algo encima y si es doble también en la siguiente fila
+// Comprueba si el elemento tiene algo encima y si es doble también en la siguiente fila
 function esSeleccionable(coords) {
     const element = myBoardObjects[coords.x][coords.y];
     const rowDesde = coords.x - 1;
