@@ -1,4 +1,7 @@
-// Init required variables and board config
+// Testing con canvas y vanilla JS
+// Pediente refactorización de código - Movimientos combo / Defensa - Animaciones 
+
+// Inicialización de variables y configuración del tablero
 const cvs = document.getElementById("board");
 const ctx = cvs.getContext("2d");
 const elemLeft = cvs.offsetLeft;
@@ -12,20 +15,25 @@ let lastColumna = null;
 cvs.addEventListener('click', initLeftClickHandler);
 cvs.addEventListener('contextmenu', initRightClickHandler);
 
-const imagesArray = [
-    'assets/img/demon1.png',
-    'assets/img/demon2.png',
-    'assets/img/hellhound.png',
-    'assets/img/bosslava1.png',
-    'assets/img/bosslava2.png'
-];
 
+// Implementar modelos de razas, heroes, pjs
+// Tener en cuenta todas posibilidades y colores
+// Pasar a archivo a modo de librería, JSON
 const razas = [
     {
         id: 0,
         nombre: 'Demonios',
-        characters: [
-            'Hero 1', 'Hero 2'
+        heroes: [
+            {
+                id: 0,
+                nombre: 'Sr Stark',
+                habilidad: 'Tormenta de fuego'
+            },
+            {
+                id: 1,
+                nombre: 'Dr World',
+                habilidad: 'Engullir'
+            }
         ],
         personajes: [
             {
@@ -41,7 +49,7 @@ const razas = [
             {
                 id: 1,
                 name: 'Demon',
-                img: 'assets/img/demon1.png',
+                img: 'assets/img/hellhound.png',
                 atk: 3,
                 def: 4,
                 type:1,
@@ -49,8 +57,8 @@ const razas = [
             },
             {
                 id: 2,
-                name: 'Infernal Dog',
-                img: 'assets/img/demon2.png',
+                name: 'Dog',
+                img: 'assets/img/hellhound.png',
                 atk: 3,
                 def: 4,
                 type:1,
@@ -58,25 +66,43 @@ const razas = [
             },
             {
                 id: 3,
-                name: 'Boss Lava',
-                img: 'assets/img/bosslava1.png',
+                name: 'Sucubo',
+                img: 'assets/img/hellhound.png',
                 atk: 3,
                 def: 4,
-                type:3,
+                type:1,
                 raza:0,
             },
             {
                 id: 4,
-                name: 'Dragon',
-                img: 'assets/img/bosslava2.png',
+                name: 'Abyss',
+                img: 'assets/img/hellhound.png',
                 atk: 3,
                 def: 4,
-                type:3,
+                type:1,
                 raza:0,
-            }
+            },
+            {
+                id: 5,
+                name: 'Golem',
+                img: 'assets/img/hellhound.png',
+                atk: 3,
+                def: 4,
+                type:1,
+                raza:0,
+            },
         ]
     }
-]
+];
+
+// Imagenes y modelo de PJ's provisionales para testing (eliminar)
+const imagesArray = [
+    'assets/img/demon1.png',
+    'assets/img/demon2.png',
+    'assets/img/hellhound.png',
+    'assets/img/sucubo.png',
+    'assets/img/bosslava2.png'
+];
 
 const pjsBoard = [
     {
@@ -115,7 +141,7 @@ const pjsBoard = [
         name: 'Basic champ 1',
         id: 5,
         color: 'green',
-        type: 2
+        type: 1
     },
     {
         name: 'Basic champ 1',
@@ -133,7 +159,7 @@ const pjsBoard = [
         name: 'Basic champ 1',
         id: 8,
         color: 'green',
-        type: 2
+        type: 1
     },
     {
         name: 'Basic champ 1',
@@ -161,26 +187,17 @@ const pjsBoard = [
     },
 ];
 
+// La generación del tablero debe ser aleatoria en base a parámetros a definir
 myBoardObjects = [
     [ pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[1], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
     [ pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[11], pjsBoard[11], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
     [ pjsBoard[0], pjsBoard[0], pjsBoard[2], pjsBoard[11], pjsBoard[11], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
-    [ pjsBoard[0], pjsBoard[0], pjsBoard[12], pjsBoard[12], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
-    [ pjsBoard[0], pjsBoard[3], pjsBoard[12], pjsBoard[12], pjsBoard[4], pjsBoard[0], pjsBoard[5], pjsBoard[0] ],
+    [ pjsBoard[0], pjsBoard[0], pjsBoard[12], pjsBoard[12], pjsBoard[4], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
+    [ pjsBoard[0], pjsBoard[3], pjsBoard[12], pjsBoard[12], pjsBoard[4], pjsBoard[0], pjsBoard[5], pjsBoard[10] ],
     [ pjsBoard[0], pjsBoard[6], pjsBoard[0], pjsBoard[7], pjsBoard[8], pjsBoard[0], pjsBoard[9], pjsBoard[10] ]
 ];
 
-// myBoardObjects = [
-//     [ pjsBoard[0], pjsBoard[0], pjsBoard[1], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
-//     [ pjsBoard[0], pjsBoard[11], pjsBoard[11], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
-//     [ pjsBoard[0], pjsBoard[11], pjsBoard[11], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
-//     [ pjsBoard[0], pjsBoard[2], pjsBoard[12], pjsBoard[12], pjsBoard[0], pjsBoard[0], pjsBoard[0], pjsBoard[0] ],
-//     [ pjsBoard[0], pjsBoard[3], pjsBoard[12], pjsBoard[12], pjsBoard[4], pjsBoard[0], pjsBoard[5], pjsBoard[0] ],
-//     [ pjsBoard[0], pjsBoard[6], pjsBoard[0], pjsBoard[7], pjsBoard[8], pjsBoard[0], pjsBoard[9], pjsBoard[10] ]
-// ];
-
 printBoard(myBoardObjects);
-
 
 function printBoard(board) {
     console.log('pintamos', board);
@@ -203,7 +220,7 @@ function drawSquare(x, y, player, ids){
             img.src = imagesArray[0];
             break;
         case 2:
-            img.src = imagesArray[1];
+            img.src = imagesArray[3];
             break;
         case 3:
             img.src = imagesArray[4];
@@ -216,13 +233,21 @@ function drawSquare(x, y, player, ids){
         };
         ctx.strokeRect(x*SQ,y*SQ,2*SQ,2*SQ);
         ids.push(player.id);
+
+    } else if (player.type === 2 && !ids.includes(player.id)) {
+        img.onload = function () {
+            ctx.drawImage(img, x*SQ, y*SQ, SQ, 2*SQ);
+        };
+        ctx.strokeRect(x*SQ,y*SQ,SQ,2*SQ);
+        ids.push(player.id);
+
     } else if (!ids.includes(player.id)) {
         img.onload = function () {
             ctx.drawImage(img, x*SQ,y*SQ, SQ, SQ);
         };
     } 
 
-    if (player.type !== 3) {
+    if (player.type !== 3 && player.type !== 2) {
         ctx.strokeRect(x*SQ,y*SQ,SQ,SQ);
     }
 }
@@ -252,6 +277,13 @@ function mover(pj, coordsPj, col) {
                 myBoardObjects[0][col + 1] = pj;
                 myBoardObjects[1][col] = pj;
                 myBoardObjects[1][col + 1] = pj;
+        }
+    } else if (pj.type === 2) {
+        if (myBoardObjects[0][col].id === 0 && myBoardObjects[1][col].id === 0) {
+            myBoardObjects[1][col] = pj;
+            myBoardObjects[0][col] = pj;
+            myBoardObjects[coordsPj.x + 1][coordsPj.y] = pjsBoard[0]; 
+            myBoardObjects[coordsPj.x][coordsPj.y] = pjsBoard[0]; 
         }
     } else {
         // Si la primera casilla está vacía lo colocamos allí y shifteamos
@@ -331,12 +363,14 @@ function paintSelected(coordsSelected ) {
     ctx.strokeStyle = "RED";
     if (element.type === 3) {
         ctx.strokeRect(coordsSelected.y*SQ,coordsSelected.x*SQ,2*SQ,2*SQ);
+    } else if (element.type === 2) {
+        ctx.strokeRect(coordsSelected.y*SQ,coordsSelected.x*SQ,SQ,2*SQ);
     } else {
         ctx.strokeRect(coordsSelected.y*SQ,coordsSelected.x*SQ,SQ,SQ);
     }
 }
 
-// comprueba si el elemento tiene algo encima y si es doble también en la siguiente fila
+// Comprueba si el elemento tiene algo encima y si es doble también en la siguiente fila
 function esSeleccionable(coords) {
     const element = myBoardObjects[coords.x][coords.y];
     const rowDesde = coords.x - 1;
